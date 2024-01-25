@@ -37,7 +37,7 @@ function processFile(path) {
     x = path;
     open(path);
     getRawStatistics(nPixels, mean, min, max, std, histogram);
-    max_mod = (max/4);
+    max_mod = (max/3);
     setMinAndMax(min, max_mod);
     run("8-bit");
     
