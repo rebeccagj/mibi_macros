@@ -33,8 +33,9 @@ function processFiles(dir) {
 }
 
 function processFile(path) {
-  if (endsWith(path, "dsDNA.tiff")) {
+  if (endsWith(path, ".tiff")) {
     x = path;
+    print(x);
     open(path);
     getRawStatistics(nPixels, mean, min, max, std, histogram);
     max_mod = (max/3);
@@ -42,6 +43,7 @@ function processFile(path) {
     run("8-bit");
     
     x = x.replace("\.tiff", "_brightened.tiff"); // Amend the filename before saving
+    print(x);
     saveAs(x);
     
     close();
