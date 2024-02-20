@@ -1,6 +1,4 @@
 dir = getDirectory("Select a directory containing TIFF files");
-output = "8bit/"; 
-
 setBatchMode(true);
 count = 0;
 countFiles(dir);
@@ -33,21 +31,18 @@ function processFiles(dir) {
 }
 
 function processFile(path) {
-  if (endsWith(path, ".tiff")) {
+  if (endsWith(path, ".tiff") && !endsWith(path, "_brightened.tiff")) {
     x = path;
-    print(x);
     open(path);
     getRawStatistics(nPixels, mean, min, max, std, histogram);
-    max_mod = (max/3);
+    max_mod = (max/4);
     setMinAndMax(min, max_mod);
     run("8-bit");
     
-    x = x.replace("\.tiff", "_brightened.tiff"); // Amend the filename before saving
-    print(x);
+    // Amend the filename before saving
+    x = x.replace("\.tiff", "_brightened.tiff");
     saveAs(x);
     
     close();
   }
 }
-
-print("Done! (:");
