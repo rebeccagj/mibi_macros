@@ -1,49 +1,35 @@
-fov_dir_list = newArray(0);
-
-exp_dir = "/home/rebecca/Documents/mibi/toffy_dirs/Rosetta_Compensated_Images/v8_2/2023-12-01-PROJ88-PAN82-SLD138-TMA10Titration-DSCOLAB/";
-
-// Add items to the list
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-10-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-11-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-2-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-2-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-3-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-4-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-5-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-6-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-8-scan-1/");
-fov_dir_list = Array.concat(fov_dir_list, exp_dir+"fov-9-scan-1/");
-
-Array.print(fov_dir_list);
-
-function incr_brightness_8bit(source_dir, save_dir, filename){
-    open(source_dir + filename);
-    getRawStatistics(nPixels, mean, min, max, std, histogram);
-    max_mod = (max/4);
-    setMinAndMax(min, max_mod);
-    run("8-bit");
-    saveAs("Tiff", save_dir + filename);
-    close();
-}
-
-// Print the list
-print("begining brightening:");
-setBatchMode(true);
-for (i = 0; i < fov_dir_list.length; i++) {
-    source_dir = fov_dir_list[i]+"rescaled/";
-    save_dir = fov_dir_list[i]+"brightened/";
-
-    if (!File.exists(save_dir)) {
-        File.makeDirectory(save_dir);
-        print("Directory created: " + save_dir);
-    } else {
-        print("Directory already exists: " + save_dir);
-    }
-
-    tiff_list = getFileList(source_dir);
+// Macro to process each directory
+macro "Process Directories" {
+    // Define the directory path
+    dirPath = getDirectory("Select a directory containing TIFF files");
     
-    for (k = 0; k < tiff_list.length; k++) {
-        incr_brightness_8bit(source_dir, save_dir, tiff_list[k]);
+    // Get a list of directories
+    list = getFileList(dirPath);
+
+    seg_tiff_vec = newArray(
+                "99_set3_fov3_T10-99a-2_segmentation_borders.tiff"
+    );
+
+    // Loop through each directory
+    for (i = 0; i < 1; i++) {/*  */
+        dir = list[i];
+        if(File.isDirectory(dirPath + dir)) {
+            // Open the images
+
+            open(dirPath + dir + seg_tiff_vec[i]);
+            open(dirPath + dir + "/KRT5_brightened.tiff");
+            open(dirPath + dir + "/Ki-67_brightened.tiff");
+            open(dirPath + dir + "/FoxP3_AF488_brightened.tiff");
+            open(dirPath + dir + "/CD3_brightened.tiff");
+            open(dirPath + dir + "/dsDNA_brightened.tiff");
+
+            // Red: Channel 1
+            // Green: Channel 2
+            // Blue: Channel 3
+            // Grey: Channel 4
+            // Cyan: Channel 5
+            // Magenta: Channel 6
+            // Yellow: Channel 7
+        }
     }
 }
-setBatchMode(false);

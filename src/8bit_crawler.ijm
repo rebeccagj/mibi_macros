@@ -31,18 +31,15 @@ function processFiles(dir) {
 }
 
 function processFile(path) {
-  if (endsWith(path, ".tiff") && !endsWith(path, "_brightened.tiff")) {
+  if (endsWith(path, ".tiff") && !endsWith(path, "brightened.tiff") && !endsWith(path, "8bit.tiff")) {
     x = path;
     open(path);
     getRawStatistics(nPixels, mean, min, max, std, histogram);
     max_mod = (max/4);
     setMinAndMax(min, max_mod);
     run("8-bit");
-    
-    // Amend the filename before saving
     x = x.replace("\.tiff", "_brightened.tiff");
-    saveAs(x);
-    
+    saveAs(x);    
     close();
   }
 }
